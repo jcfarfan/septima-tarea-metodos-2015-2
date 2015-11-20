@@ -1,0 +1,83 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+float pasoRungerKutta4(float posicionesX, float posicionesY, float h,float alpha, float beta, float gamma, float epsilon);
+void *loopRungeKutta4(float *x, float *y, float *t,float h,float alpha, float beta, float gamma, float epsilon, int n);
+float *crearArregloCero(int n_points);
+float xprime(float a, float b, float alpha, float beta);
+float yprime(float a, float b, float gamma, float epsilon);
+
+
+int main(){
+
+  return 0;
+}
+
+
+float *crearArregloCero(int n_points){
+  int i;
+  float *arregloRespuesta;
+  if(!(arregloRespuesta = malloc(n_points * sizeof(float)))){
+    printf("Problema en reserva\n");
+    exit(1);
+  }
+  //Inicializar en 0
+  for(i=0;i<n_points;i++)
+    {
+      arregloRespuesta[i]=0.0;
+    }
+  return arregloRespuesta;
+}
+
+float pasoRungerKutta4(float posicionesX, float posicionesY, float h,float alpha, float beta, float gamma, float epsilon){
+  float k1,k2,k3,k4,kF;
+  float l1,l2,l3,l4,lF;
+  float inter1x,inter2x,inter3x, inter1y,inter2y,inter3y;
+
+  inter1x = posicionesX+0.5*h*k1;
+  inter2x = posicionesX+0.5*h*k2;
+  inter3x = posicionesX+h*k3;
+  inter1y = posicionesY+0.5*h*l1;
+  inter2y = posicionesY+0.5*h*l2;
+  inter3y = posicionesY+h*l3;
+
+  k1 = xprime(posicionesX, posicionesY,alpha,beta);
+  l1 = yprime(posicionesX, posicionesY,gamma,epsilon);
+  k2 = xprime(inter1x,inter1y,alpha,beta);
+  l2 = yprime(inter1x,inter1y,gamma,epsilon);
+  k3 = xprime(inter2x,inter2y,alpha,beta);
+  l3 = yprime(inter2x,inter2y,gamma,epsilon);
+  k4 = xprime(inter3x,inter3y,alpha,beta);
+  l4 = yprime(inter3x,inter3y,gamma,epsilon);
+
+  kF = (1.0/6.0)*(k1+2*k2+2*k3+k4);
+  lF = (1.0/6.0)*(l1+2*l2+2*l3+l4);
+  
+  return kF,lF;
+}
+
+void *loopRungeKutta4(float *x, float *y, float *t,float h,float alpha, float beta, float gamma, float epsilon, int n){
+  int i;
+  float kf,lf;
+  for(i=1; i<n; i++){
+
+    kf,lf = pasoRungerKutta4(x[i-1],y[i-1],h,alpha,beta,gamma,epsilon);
+
+    x[i]=x[i-1]+kf;
+    y[i]=y[i-1]+lf;
+    t[i]=t[i-1]+h;
+  }
+}
+
+float xprime(float a, float b, float alpha, float beta){
+  float xp;
+  xp = a*(alpha-beta*b);
+  return xp;
+}
+
+float yprime(float a, float b, float gamma, float epsilon){
+  float yp;
+  yp = -b*(gamma-epsilon*a);
+  return yp;
+}

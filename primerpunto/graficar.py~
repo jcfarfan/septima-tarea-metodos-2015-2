@@ -1,0 +1,18 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib
+
+archivo = np.loadtxt("data.dat")
+
+a = archivo[:,0] 
+d = archivo[:,1]
+b = archivo[:,2]
+c = archivo[:,3]
+
+plt.scatter(a,d)
+plt.scatter(a,b)
+plt.scatter(a,c)
+plt.scatter(d,b)
+plt.scatter(d,c)
+plt.scatter(b,c)
+
